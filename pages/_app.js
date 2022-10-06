@@ -4,8 +4,7 @@ import "../styles/globals.css";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import { config } from "@fortawesome/fontawesome-svg-core";
-import 'mdb-react-ui-kit/dist/css/mdb.min.css'
-
+import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
@@ -20,12 +19,14 @@ function MyApp({ Component, pageProps }) {
 
   const session = false;
   return (
-    <><Head>
-      <title>Registraduria</title>
-
-    </Head><SessionProvider session={session}>
+    <>
+      <Head>
+        <title>Registraduria</title>
+      </Head>
+      <SessionProvider session={session}>
         <Component {...pageProps} />
-      </SessionProvider></>
+      </SessionProvider>
+    </>
   );
 }
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import { getSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function TopNavLogin({ toggleSideBar }) {
   const [user, setUser] = useState(null);
@@ -15,6 +16,8 @@ export default function TopNavLogin({ toggleSideBar }) {
       session && setUser(session.user);
     })();
   }, []);
+
+  console.log(useRouter)
 
   return (
     <nav className="d-flex  align-items-center fixed-top bg-transparent sb-topnav shadow-sm bg-white navbar navbar-expand navbar-ligth bg-ligth">
@@ -28,7 +31,7 @@ export default function TopNavLogin({ toggleSideBar }) {
         </a>
       </Link>
       {
-        user && <Link href="/login"><a className="position-absolute mx-4 text-dark end-0">Iniciar session</a></Link>
+        !user && <Link href="/login"><a className="position-absolute mx-4 text-dark end-0">Iniciar session</a></Link>
       }
       
     </nav>
