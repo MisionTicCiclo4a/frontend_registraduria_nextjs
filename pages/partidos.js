@@ -1,21 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-
 import SideNav from "components/Layout/SideNav";
-import { deleteData, getData, updateData } from "helpers/fetchPost";
-
+import { deleteData, getData, updateData } from "helpers/conecctionApi";
 import { unstable_getServerSession } from "next-auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
+export default function Partidos({ dataParties, session, url }) {
 
-
-
-export default function Partidos() {
   const { push } = useRouter();
-  const [dataParties, setDataParties] = useState([]);
+  const xD = session.user.image;
 
   const [infoPartie, setInfoPartie] = useState({
     codeparties: "",
@@ -33,33 +29,16 @@ export default function Partidos() {
     });
   };
 
-  const url = "http://127.0.0.1:5000/parties";
-  const traeData = async () => {
-    //Traer partidos
-    const token = localStorage.getItem("token");
-    if (token) {
-      const dataBackend = await getData(token, url);
-
-      setDataParties(dataBackend);
-    }
-  };
-
-  useEffect(() => {
-    traeData();
-  }, []);
-
   const deletePartie = async (id) => {
-    //Eliminar Partidos
-
-    const token = localStorage.getItem("token");
-    const resBackend = await deleteData(token, url, id);
-    traeData();
+    const resBackend = await deleteData(xD, url, id);
+    push("/partidos");
+    console.log(resBackend.status);
   };
 
   const updatePartie = async () => {
-    const token = localStorage.getItem("token");
-    const res =await updateData(token, url, idUpdate, infoPartie);
-    res && traeData();
+    const resBackend = await updateData(xD, url, idUpdate, infoPartie);
+    console.log(idUpdate);
+    push("/partidos");
   };
 
   return (
@@ -150,7 +129,7 @@ export default function Partidos() {
                 className="btn btn-primary"
                 data-mdb-dismiss="modal"
               >
-               Actualizar
+                Actualizar
               </button>
             </div>
           </div>
@@ -182,7 +161,7 @@ export default function Partidos() {
                     <tr key={index}>
                       <td>
                         <div className="d-flex align-items-center ">
-                          <img 
+                          <img
                             src={ele.logo}
                             alt=""
                             className="imgTableParties"
@@ -209,8 +188,8 @@ export default function Partidos() {
                             className="btn btn-light btn-sm"
                             data-mdb-toggle="modal"
                             data-mdb-target="#exampleModal"
-                            value={ele._id}
-                            onClick={(e) => setIdUpdate(e.target.value)}
+                    
+                            onClick={() => setIdUpdate(ele._id)}
                           >
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
@@ -237,22 +216,27 @@ export default function Partidos() {
     </SideNav>
   );
 }
+
 export async function getServerSideProps(context) {
   const session = await unstable_getServerSession(
     context.req,
     context.res,
     authOptions
   );
+
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/login",
         permanent: false,
       },
     };
   }
+  const token = session.user.image; // trae el token xD solucio para mi yo del futuro
 
+  const url = process.env.PARTIES_URL;
+  const dataParties = await getData(token, url);
   return {
-    props: {},
+    props: { dataParties, session, url },
   };
 }

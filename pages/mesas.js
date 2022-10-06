@@ -1,19 +1,22 @@
 import SideNav from "components/Layout/SideNav";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { unstable_getServerSession } from "next-auth";
-import { deleteData, getData, updateData } from "helpers/fetchPost";
-import { useEffect, useRef, useState } from "react";
+import { deleteData, getData, updateData } from "helpers/conecctionApi";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-export default function Mesas() {
-  const [dataTables, setdataTables] = useState([]);
+export default function Mesas({ dataTables, session, url }) {
+  const { push } = useRouter();
+  const xD = session.user.image;
+
   const [idUpdate, setIdUpdate] = useState("");
   const [infoMesas, setinfoMesas] = useState({
-    cedulasInscritas: "",
     numeroMesa: "",
+    cedulasInscritas: "",
   });
 
   const captureValue = (e) => {
@@ -23,36 +26,16 @@ export default function Mesas() {
     });
   };
 
-  const url = "http://127.0.0.1:5000/tables";
-  const traeData = async () => {
-
-    //Traer partidos
-    const token = localStorage.getItem("token");
-    if (token) {
-      const dataBackend = await getData(token, url);
-
-      setdataTables(dataBackend);
-    }
-  };
-
-  useEffect(() => {
-    traeData();
-  }, []);
-
   const deleteTable = async (id) => {
-    //Eliminar Partidos
-
-    const token = localStorage.getItem("token");
-    const resBackend = await deleteData(token, url, id);
-    traeData();
+    const resBackend = await deleteData(xD, url, id);
+    push("/mesas");
+    console.log(resBackend.status);
   };
 
-  const updataTable = async () => {
-    const token = localStorage.getItem("token");
-
-    
-    const res =await updateData(token, url, idUpdate, infoMesas);
-    res && traeData()
+  const updateTable = async () => {
+    const resBackend = await updateData(xD, url, idUpdate, infoMesas);
+    console.log(resBackend.status);
+    push("/mesas");
   };
 
   return (
@@ -116,12 +99,12 @@ export default function Mesas() {
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault();
-                  updataTable();
+                  updateTable();
                 }}
                 className="btn btn-primary"
                 data-mdb-dismiss="modal"
               >
-               Actualizar
+                Actualizar
               </button>
             </div>
           </div>
@@ -139,44 +122,43 @@ export default function Mesas() {
                 </Link>
               </div>
               <div className="container-fluid">
-              <table className="table mx-4 mt-4 table-sm text-center p-4">
-                <thead>
-                  <tr>
-                    <th className="fw-bold">Codigo unico de le mesa</th>
-                    <th className="fw-bold">Cedulas Inscritas</th>
-                    <th className="fw-bold">Numero de Mesa</th>
-                    <th className="fw-bold">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dataTables.map((ele, index) => (
-                    <tr key={index}>
-                      <td>{ele._id}</td>
-                      <td>{ele.cedulasInscritas}</td>
-                      <td>{ele.numeroMesa}</td>
-                      <td>
-                        <div className="d-flex gap-2 justify-content-center">
-                          <button
-                            className="btn btn-light btn-sm"
-                            data-mdb-toggle="modal"
-                            data-mdb-target="#exampleModal"
-                            value={ele._id}
-                            onClick={() => setIdUpdate(ele._id)}
-                          >
-                            <FontAwesomeIcon icon={faPenToSquare} />
-                          </button>
-                          <button
-                            onClick={() => deleteTable(ele._id)}
-                            className="btn btn-danger btn-sm"
-                          >
-                            <FontAwesomeIcon icon={faTrashCan} />
-                          </button>
-                        </div>
-                      </td>
+                <table className="table mx-4 mt-4 table-sm text-center p-4">
+                  <thead>
+                    <tr>
+                      <th className="fw-bold">Codigo unico de le mesa</th>
+                      <th className="fw-bold">Cedulas Inscritas</th>
+                      <th className="fw-bold">Numero de Mesa</th>
+                      <th className="fw-bold">Acciones</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {dataTables.map((ele, index) => (
+                      <tr key={index}>
+                        <td>{ele._id}</td>
+                        <td>{ele.cedulasInscritas}</td>
+                        <td>{ele.numeroMesas}</td>
+                        <td>
+                          <div className="d-flex gap-2 justify-content-center">
+                            <button
+                              className="btn btn-light btn-sm"
+                              data-mdb-toggle="modal"
+                              data-mdb-target="#exampleModal"
+                              onClick={() => setIdUpdate(ele._id)}
+                            >
+                              <FontAwesomeIcon icon={faPenToSquare} />
+                            </button>
+                            <button
+                              onClick={() => deleteTable(ele._id)}
+                              className="btn btn-danger btn-sm"
+                            >
+                              <FontAwesomeIcon icon={faTrashCan} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </>
           ) : (
@@ -195,16 +177,20 @@ export async function getServerSideProps(context) {
     context.res,
     authOptions
   );
+
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/login",
         permanent: false,
       },
     };
   }
+  const token = session.user.image; // trae el token
 
+  const url = process.env.TABLES_URL;
+  const dataTables = await getData(token, url);
   return {
-    props: {},
+    props: { dataTables, session, url },
   };
 }

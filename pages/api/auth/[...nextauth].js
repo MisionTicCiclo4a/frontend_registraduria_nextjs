@@ -31,9 +31,7 @@ export const authOptions = {
             image: content.token,
           };
         }
-
-
-        
+       
         if (content.token) {
           return {
             name: "Sara",

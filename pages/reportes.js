@@ -2,7 +2,7 @@ import SideNav from "components/Layout/SideNav";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 
-import { getData } from "helpers/fetchPost";
+import { getData } from "helpers/conecctionApi";
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faPenToSquare } from "@fortawesome/free-solid-svg-icons";

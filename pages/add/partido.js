@@ -1,11 +1,15 @@
 import SideNav from "components/Layout/SideNav";
-import { createData } from "helpers/fetchPost";
+import { createData } from "helpers/conecctionApi";
+import { unstable_getServerSession } from "next-auth";
 
 import { useRouter } from "next/router";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import {  useState } from "react";
 
-export default function AddPartido() {
+export default function AddPartido({ session, url }) {
+  const xD = session.user.image;
   const { push } = useRouter();
+
   const [infoParties, setinfoParties] = useState({
     codeparties: "",
     lema: "",
@@ -20,23 +24,16 @@ export default function AddPartido() {
     });
   };
 
-  const url = "https://web-production-03f6.up.railway.app/parties";
   const sendData = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-    if (token && infoParties) {
-
-      const dataBackend = createData(token, url, infoParties);
-      dataBackend.ok === "200" && alert("creado con exito");
-      push("/partidos");
-    }
+    const response = await createData(xD, url, infoParties);
+    push("/partidos");
   };
+
+  
 
   return (
     <SideNav>
-
-
-
       <div className="container-fluid h-100 gap-2">
         <div className="row gap-5 mx-5 d-flex justify-content-center align-items-center">
           {/* start form */}
@@ -109,3 +106,27 @@ export default function AddPartido() {
     </SideNav>
   );
 }
+
+export async function getServerSideProps(context) {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  const url = process.env.PARTIES_URL;
+
+  return {
+    props: { session, url },
+  };
+}
+
+

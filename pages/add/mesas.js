@@ -1,33 +1,29 @@
 import SideNav from "components/Layout/SideNav";
-import { createData } from "helpers/fetchPost";
-
+import { createData } from "helpers/conecctionApi";
+import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import {  useState } from "react";
 
-export default function AddMesas() {
+export default function AddMesas({session, url }) {
+  const xD = session.user.image;
   const { push } = useRouter();
+  
   const [infoMesas, setinfoMesas] = useState({
     cedulasInscritas: "",
-    numeroMesa: "",
+    numeroMesas: "",
   });
-
   const captureValue = (e) => {
     setinfoMesas({
       ...infoMesas,
       [e.target.name]: e.target.value,
     });
   };
-
-  const url = "https://web-production-03f6.up.railway.app/tables";
   const sendData = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-    if (token && infoMesas) {
-
-      const dataBackend = createData(token, url, infoMesas);
-      dataBackend.ok === "200" && alert("creado con exito");
-      push("/mesas");
-    }
+    const {response} = await createData(xD, url, infoMesas);
+    push("/mesas");
+    console.log(response);
   };
 
   return (
@@ -53,7 +49,7 @@ export default function AddMesas() {
             <div className=" mb-4">
               <input
                 onChange={captureValue}
-                name="numeroMesa"
+                name="numeroMesas"
                 type="text"
                 id="form3Example3"
                 className="form-control"
@@ -89,3 +85,27 @@ export default function AddMesas() {
     </SideNav>
   );
 }
+
+
+export async function getServerSideProps(context) {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  const url = process.env.TABLES_URL;
+
+  return {
+    props: { session, url },
+  };
+}
+

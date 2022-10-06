@@ -1,24 +1,25 @@
 import SideNav from "components/Layout/SideNav";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
-import { deleteData, getData, updateData } from "helpers/fetchPost";
-import { useEffect, useState } from "react";
+import { deleteData, getData, updateData } from "helpers/conecctionApi";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
+export default function Candidatos({ dataCandidates, session, url }) {
+  const { push } = useRouter();
+  const [idTemp, setiIdTemp] = useState("");
 
+  const xD = session.user.image;
 
-export default function Candidatos() {
-  const [dataCandidates, setDataCandidates] = useState([]);
   const [infoCandidatos, setinfoCandidatos] = useState({
     apellido: "",
     cedula: "",
     nombre: "",
     numeroderesolucion: "",
   });
-  const [idUpdate, setIdUpdate] = useState();
-
 
   const captureValue = (e) => {
     setinfoCandidatos({
@@ -27,30 +28,16 @@ export default function Candidatos() {
     });
   };
 
-  const url = "http://127.0.0.1:5000/candidates";
-  const traeData = async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const dataBackend = await getData(token, url);
-      setDataCandidates(dataBackend);
-    }
-  };
-
-  useEffect(() => {
-    traeData();
-  }, []);
   const deleteCandidato = async (id) => {
-    const token = localStorage.getItem("token");
-    const resBackend = await deleteData(token, url, id);
-    resBackend && traeData();
+    const resBackend = await deleteData(xD, url, id);
+    push('/candidatos')
+    console.log(resBackend.status);
   };
 
   const updateCandidato = async () => {
-
-    const token = localStorage.getItem("token");
-
-    const resBackend = await updateData(token, url, idUpdate, infoCandidatos);
-    traeData();
+    const resBackend = await updateData(xD, url, idTemp, infoCandidatos);
+    console.log(resBackend.status);
+    push('/candidatos')
   };
 
   return (
@@ -141,7 +128,7 @@ export default function Candidatos() {
                 className="btn btn-primary"
                 data-mdb-dismiss="modal"
               >
-               Actualizar
+                Actualizar
               </button>
             </div>
           </div>
@@ -175,7 +162,8 @@ export default function Candidatos() {
                     <tr key={index}>
                       <td>
                         <div className="d-flex align-items-center ">
-                          <img src={ele.logo} 
+                          <img
+                            src={ele.logo}
                             alt=""
                             className="imgTableCandidates rounded-circle"
                           />
@@ -201,9 +189,7 @@ export default function Candidatos() {
                             className="btn btn-light btn-sm"
                             data-mdb-toggle="modal"
                             data-mdb-target="#exampleModal"
-                      
-                            value={ele._id}
-                            onClick={() => setIdUpdate(ele._id)}
+                            onClick={() => setiIdTemp(ele._id)}
                           >
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
@@ -231,12 +217,13 @@ export default function Candidatos() {
     </SideNav>
   );
 }
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context, req, res) {
   const session = await unstable_getServerSession(
     context.req,
     context.res,
     authOptions
   );
+
   if (!session) {
     return {
       redirect: {
@@ -245,8 +232,11 @@ export async function getServerSideProps(context) {
       },
     };
   }
+  const token = session.user.image; // trae el token
 
+  const url = process.env.CANDIDATES_URL;
+  const dataCandidates = await getData(token, url);
   return {
-    props: {},
+    props: { dataCandidates, session, url },
   };
 }

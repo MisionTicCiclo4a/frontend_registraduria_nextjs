@@ -7,8 +7,8 @@ export const getData = async (token, url) => {
       Authorization: `Bearer ${token}`, 
     },
   });
-  const data = await rawResponse.json();
-  return data
+  const response = await rawResponse.json();
+  return response
 };
 
 export const createData = async(token, url, info) =>{ // Crear data
@@ -21,7 +21,8 @@ export const createData = async(token, url, info) =>{ // Crear data
     },
     body: JSON.stringify(info),
   });
-  const content = await rawResponse.json();
+  const response = await rawResponse.json();
+  return response
 
 }
 
@@ -35,8 +36,8 @@ export const updateData = async(token, url, id, info )=>{ // Actualiza Data
   },
   body: JSON.stringify(info),
 })
-const data = await rawResponse.json();
-return data
+const response = await rawResponse.json();
+return response
 }
 
 export const deleteData = async(token, url, id)=>{ //Elimina DataF
@@ -48,6 +49,7 @@ export const deleteData = async(token, url, id)=>{ //Elimina DataF
     Authorization: `Bearer ${token}`, 
   },
 })
-const data = await rawResponse.json();
+const response = await rawResponse.json();
+return response
 
 }
