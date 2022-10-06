@@ -18,7 +18,7 @@ export default function Candidatos() {
     numeroderesolucion: "",
   });
   const [idUpdate, setIdUpdate] = useState();
-  console.log(idUpdate);
+
 
   const captureValue = (e) => {
     setinfoCandidatos({
@@ -48,7 +48,7 @@ export default function Candidatos() {
   const updateCandidato = async () => {
 
     const token = localStorage.getItem("token");
-    console.log(idUpdate, dataCandidates);
+
     const resBackend = await updateData(token, url, idUpdate, infoCandidatos);
     traeData();
   };
@@ -57,7 +57,7 @@ export default function Candidatos() {
     <SideNav>
       {/* start Modal */}
       <div
-        className="modal fade"
+        className="modal fade mt-5"
         id="exampleModal"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -127,10 +127,10 @@ export default function Candidatos() {
             <div className="modal-footer">
               <button
                 type="button"
-                className="btn btn-light"
+                className="btn btn-danger"
                 data-mdb-dismiss="modal"
               >
-                Close
+                Cancelar
               </button>
               <button
                 type="submit"
@@ -141,7 +141,7 @@ export default function Candidatos() {
                 className="btn btn-primary"
                 data-mdb-dismiss="modal"
               >
-                Save changes
+               Actualizar
               </button>
             </div>
           </div>
@@ -159,15 +159,15 @@ export default function Candidatos() {
                 </Link>
               </div>
 
-              <table className="table mx-4 table-sm text-center p-4">
+              <table className="table mx-4 mt-4 table-sm text-center p-4">
                 <thead className="bg-light">
                   <tr>
-                    <th>Candidato</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Cedula</th>
-                    <th>Numero de resolución</th>
-                    <th>Acciones</th>
+                    <th className="fw-bold">Candidato</th>
+                    <th className="fw-bold">Nombre</th>
+                    <th className="fw-bold">Apellido</th>
+                    <th className="fw-bold">Cedula</th>
+                    <th className="fw-bold">Numero de resolución</th>
+                    <th className="fw-bold">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -191,10 +191,10 @@ export default function Candidatos() {
                       </td>
 
                       <td>
-                        <p className="fw-normal mb-1">{ele.codeparties}</p>
+                        <p className="fw-normal mb-1">{ele.cedula}</p>
                       </td>
 
-                      <td>{ele._id}</td>
+                      <td className="text-primary">{ele.numeroderesolucion}</td>
                       <td>
                         <div className="d-flex gap-2 justify-content-center">
                           <button

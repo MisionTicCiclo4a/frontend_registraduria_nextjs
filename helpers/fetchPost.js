@@ -1,5 +1,5 @@
 export const getData = async (token, url) => { 
-  console.log(token);// Traer data
+
   const rawResponse = await fetch(url, { 
     method: "GET",
     headers: {
@@ -22,7 +22,7 @@ export const createData = async(token, url, info) =>{ // Crear data
     body: JSON.stringify(info),
   });
   const content = await rawResponse.json();
-  console.log(content);
+
 }
 
 export const updateData = async(token, url, id, info )=>{ // Actualiza Data
@@ -49,5 +49,5 @@ export const deleteData = async(token, url, id)=>{ //Elimina DataF
   },
 })
 const data = await rawResponse.json();
-console.log(data);
+
 }

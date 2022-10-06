@@ -45,7 +45,6 @@ export default function Reportes() {
                     <th>Partido</th>
                     <th>Numero de Mesa</th>
                     <th>Cantidad de votos</th>
-
                     <th>Identificador Unico</th>
                   </tr>
                 </thead>
@@ -94,7 +93,7 @@ export default function Reportes() {
             </div>
           )}
           <div
-            className="modal fade"
+            className="modal fade mt-10"
             id="exampleModal"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
@@ -116,13 +115,13 @@ export default function Reportes() {
                 <div className="modal-footer">
                   <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-danger"
                     data-mdb-dismiss="modal"
                   >
-                    Close
+                    Cancelar
                   </button>
                   <button type="button" className="btn btn-primary">
-                    Save changes
+                   Actualizar
                   </button>
                 </div>
               </div>

@@ -25,7 +25,7 @@ export default function AddPartido() {
     e.preventDefault();
     const token = localStorage.getItem("token");
     if (token && infoParties) {
-      console.log(token, url, infoParties);
+
       const dataBackend = createData(token, url, infoParties);
       dataBackend.ok === "200" && alert("creado con exito");
       push("/partidos");

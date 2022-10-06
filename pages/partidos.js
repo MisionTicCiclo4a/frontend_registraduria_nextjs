@@ -50,7 +50,7 @@ export default function Partidos() {
 
   const deletePartie = async (id) => {
     //Eliminar Partidos
-    console.log(id);
+
     const token = localStorage.getItem("token");
     const resBackend = await deleteData(token, url, id);
     traeData();
@@ -66,7 +66,7 @@ export default function Partidos() {
     <SideNav>
       {/* start Modal */}
       <div
-        className="modal fade"
+        className="modal fade mt-5"
         id="exampleModal"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -136,10 +136,10 @@ export default function Partidos() {
             <div className="modal-footer">
               <button
                 type="button"
-                className="btn btn-light"
+                className="btn btn-danger"
                 data-mdb-dismiss="modal"
               >
-                Close
+                Cancelar
               </button>
               <button
                 type="submit"
@@ -150,7 +150,7 @@ export default function Partidos() {
                 className="btn btn-primary"
                 data-mdb-dismiss="modal"
               >
-                Save changes
+               Actualizar
               </button>
             </div>
           </div>
@@ -167,14 +167,14 @@ export default function Partidos() {
                   <button className="btn btn-success">Agregar Partido</button>
                 </Link>
               </div>
-              <table className="table mx-4 table-sm text-center ">
+              <table className="table mx-4 mt-4 table-sm text-center ">
                 <thead className="bg-light">
                   <tr>
-                    <th>Emblema</th>
-                    <th>Nombre</th>
-                    <th>Lema</th>
-                    <th>Codigo de partido</th>
-                    <th>Identificador Unico</th>
+                    <th className="fw-bold">Emblema</th>
+                    <th className="fw-bold">Nombre</th>
+                    <th className="fw-bold">Lema</th>
+                    <th className="fw-bold">Codigo de partido</th>
+                    <th className="fw-bold">Identificador Unico</th>
                   </tr>
                 </thead>
                 <tbody>

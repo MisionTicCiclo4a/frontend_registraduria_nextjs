@@ -45,7 +45,7 @@ export default function Login() {
       redirect: false,
     })
       .then((response) => {
-        // console.log(response);
+
         if (response.ok) {
           // Authenticate user
           push("/mesas");
@@ -58,7 +58,7 @@ export default function Login() {
         }
       })
       .catch((error) => {
-        // console.log(error);
+  
         setPageState((old) => ({
           ...old,
           processing: false,
@@ -154,7 +154,7 @@ export async function getServerSideProps(context) {
   if (session) {
     return {
       redirect: {
-        destination: "/mesas",
+        destination: "/candidatos",
         permanent: true,
       },
     };

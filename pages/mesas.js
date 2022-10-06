@@ -25,7 +25,7 @@ export default function Mesas() {
 
   const url = "http://127.0.0.1:5000/tables";
   const traeData = async () => {
-    console.log("me llamo");
+
     //Traer partidos
     const token = localStorage.getItem("token");
     if (token) {
@@ -41,7 +41,7 @@ export default function Mesas() {
 
   const deleteTable = async (id) => {
     //Eliminar Partidos
-    console.log(id);
+
     const token = localStorage.getItem("token");
     const resBackend = await deleteData(token, url, id);
     traeData();
@@ -49,7 +49,7 @@ export default function Mesas() {
 
   const updataTable = async () => {
     const token = localStorage.getItem("token");
-    console.log(token, url, idUpdate, infoMesas);
+
     
     const res =await updateData(token, url, idUpdate, infoMesas);
     res && traeData()
@@ -59,7 +59,7 @@ export default function Mesas() {
     <SideNav>
       {/* start Modal */}
       <div
-        className="modal fade"
+        className="modal fade mt-5"
         id="exampleModal"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -107,10 +107,10 @@ export default function Mesas() {
             <div className="modal-footer">
               <button
                 type="button"
-                className="btn btn-light"
+                className="btn btn-danger"
                 data-mdb-dismiss="modal"
               >
-                Close
+                Cancelar
               </button>
               <button
                 type="submit"
@@ -121,7 +121,7 @@ export default function Mesas() {
                 className="btn btn-primary"
                 data-mdb-dismiss="modal"
               >
-                Save changes
+               Actualizar
               </button>
             </div>
           </div>
@@ -138,13 +138,14 @@ export default function Mesas() {
                   <button className="btn btn-success">Agregar Mesa</button>
                 </Link>
               </div>
-              <table className="table mx-4 table-sm text-center p-4">
+              <div className="container-fluid">
+              <table className="table mx-4 mt-4 table-sm text-center p-4">
                 <thead>
                   <tr>
-                    <th>Codigo unico de le mesa</th>
-                    <th>Cedulas Inscritas</th>
-                    <th>Numero de Mesa</th>
-                    <th>Acciones</th>
+                    <th className="fw-bold">Codigo unico de le mesa</th>
+                    <th className="fw-bold">Cedulas Inscritas</th>
+                    <th className="fw-bold">Numero de Mesa</th>
+                    <th className="fw-bold">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -176,6 +177,7 @@ export default function Mesas() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </>
           ) : (
             <div className="spinner-border text-info" role="status">

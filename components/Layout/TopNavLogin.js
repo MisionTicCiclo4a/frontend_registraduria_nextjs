@@ -17,10 +17,11 @@ export default function TopNavLogin({ toggleSideBar }) {
     })();
   }, []);
 
-  console.log(useRouter)
+  const router = useRouter();
+  const rutaLogin = router.pathname
 
   return (
-    <nav className="d-flex  align-items-center fixed-top bg-transparent sb-topnav shadow-sm bg-white navbar navbar-expand navbar-ligth bg-ligth">
+    <nav className="d-flex align-items-center fixed-top sb-topnav shadow-sm  navbar navbar-expand navbar-light bg-light">
       <Link href="/">
         <a className="navbar-brand ps-3 ">
           <Image
@@ -31,9 +32,16 @@ export default function TopNavLogin({ toggleSideBar }) {
         </a>
       </Link>
       {
-        !user && <Link href="/login"><a className="position-absolute mx-4 text-dark end-0">Iniciar session</a></Link>
+        (rutaLogin === "/login" || user ?(
+          ""
+        ) : (
+          <Link href="/login">
+            <a className="position-absolute mx-4 text-dark end-0">
+              Iniciar session
+            </a>
+          </Link>
+        ))
       }
-      
     </nav>
   );
 }

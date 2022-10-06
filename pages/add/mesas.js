@@ -23,7 +23,7 @@ export default function AddMesas() {
     e.preventDefault();
     const token = localStorage.getItem("token");
     if (token && infoMesas) {
-      console.log(token, url, infoMesas);
+
       const dataBackend = createData(token, url, infoMesas);
       dataBackend.ok === "200" && alert("creado con exito");
       push("/mesas");
